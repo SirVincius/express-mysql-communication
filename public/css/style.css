@@ -1,0 +1,20 @@
+input {
+  width: 100%;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+}
+
+form {
+  width: 100%;
+}
+
+#main-container {
+  max-width: 1920px;
+  height: 100%;
+}
