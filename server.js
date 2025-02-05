@@ -9,10 +9,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
+app.get("^/$|/index(.html)?", (req, res) => {
+  res.render("pages/index");
+});
+
 app
-  .route("/")
+  .route("/login(.html)?")
   .get((req, res) => {
-    res.render("pages/index");
+    res.render("pages/login");
   })
   .post((req, res) => {
     let first_name = req.body.firstName;
@@ -35,7 +39,7 @@ app
         2
       )
     );
-    res.render("pages/index");
+    res.render("pages/login");
   });
 
 app.listen(5500, (req, res) => {
