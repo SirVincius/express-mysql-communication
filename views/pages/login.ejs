@@ -9,16 +9,40 @@
       id="main-container"
       class="container-fluid d-flex justify-content-center align-items-center"
     >
-      <form action="/" method="post">
+      <form action="/login" method="post" novalidate>
         <div class="container fluid">
           <div class="row justify-content-center">
             <div class="col-sm-12 col-md-6 mb-3">
               <label for="firstName" class="form-label">First Name</label>
-              <input type="text" class="form-control" name="firstName" />
+              <input
+                type="text"
+                class="form-control"
+                name="firstName"
+                value="<%= formData.firstName %>"
+              />
+              <!-- Error handling for first name-->
+              <% if(locals.errors) { const firstNameErrors =
+              locals.errors.filter(error => error.path === 'firstName');
+              if(firstNameErrors.length > 0) { %>
+              <div class="error_message"><%= firstNameErrors[0].msg %></div>
+              <% }} %>
             </div>
+
             <div class="col-sm-12 col-md-6 mb-3">
               <label for="lastName" class="form-label">Last Name</label>
-              <input type="text" class="form-control" name="lastName" />
+              <input
+                type="text"
+                class="form-control"
+                name="lastName"
+                value="<%= formData.lastName %>"
+              />
+
+              <!-- Error handling for last name-->
+              <% if(locals.errors) { const lastNameErrors =
+              locals.errors.filter(error => error.path === 'lastName');
+              if(lastNameErrors.length > 0) { %>
+              <div class="error_message"><%= lastNameErrors[0].msg %></div>
+              <% }} %>
             </div>
           </div>
         </div>
@@ -26,11 +50,33 @@
           <div class="row justify-content-center">
             <div class="col-sm-12 col-md-6 mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" name="email" />
+              <input
+                type="email"
+                class="form-control"
+                name="email"
+                value="<%= formData.email %>"
+              />
+              <!-- Error handling for email -->
+              <% if(locals.errors) { const emailErrors =
+              locals.errors.filter(error => error.path === 'email');
+              if(emailErrors) { emailErrors.forEach(error => { %>
+              <div class="error_message"><%= error.msg %></div>
+              <% });}} %>
             </div>
             <div class="col-sm-12 col-md-6 mb-3">
               <label for="birthDate" class="form-label">Birth Date</label>
-              <input type="date" class="form-control" name="birthDate" />
+              <input
+                type="date"
+                class="form-control"
+                name="birthDate"
+                value="<%= formData.birthDate %>"
+              />
+              <!-- Error handling for date -->
+              <% if(locals.errors) { const birthDateErrors =
+              locals.errors.filter(error => error.path === 'birthDate');
+              if(birthDateErrors) { birthDateErrors.forEach(error => { %>
+              <div class="error_message"><%= error.msg %></div>
+              <% });}} %>
             </div>
           </div>
         </div>
@@ -39,6 +85,12 @@
             <div class="col-sm-12 col-md-6 mb-3">
               <label for="password" class="form-label">Password</label>
               <input type="password" class="form-control" name="password" />
+              <!-- Error handling for password -->
+              <% if(locals.errors) { const passwordErrors =
+              locals.errors.filter(error => error.path === 'password');
+              if(passwordErrors) { passwordErrors.forEach(error => { %>
+              <div class="error_message"><%= error.msg %></div>
+              <% });}} %>
             </div>
             <div class="col-sm-12 col-md-6 mb-3">
               <label for="passwordConfirmation" class="form-label"
@@ -49,6 +101,13 @@
                 class="form-control"
                 name="passwordConfirmation"
               />
+              <!-- Error handling for password confirmation -->
+              <% if(locals.errors) { const passwordConfirmationError =
+              locals.errors.filter(error => error.path ===
+              'passwordConfirmation'); if(passwordConfirmationError) {
+              passwordConfirmationError.forEach(error => { %>
+              <div class="error_message"><%= error.msg %></div>
+              <% });}} %>
             </div>
           </div>
           <button type="submit" class="btn btn-primary">Create Account</button>
