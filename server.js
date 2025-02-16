@@ -1,4 +1,5 @@
 require("dotenv").config();
+const bcrypt = require("./bcrypt.js");
 const {
   body,
   ValidationChain,
@@ -8,6 +9,7 @@ const {
 const express = require("express");
 const app = express();
 const path = require("path");
+const db = require("./db.js");
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -49,11 +51,8 @@ app
         .withMessage(
           "Password must contain at least one of these symbols : !@#$%^&*"
         ),
-      body("passwordConfirmation")
-        .equals(body("password"))
-        .withMessage("Both password must be identical"),
     ],
-    (req, res) => {
+    async (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         console.log(errors);
@@ -63,13 +62,27 @@ app
           formData: req.body,
         });
       }
-      let first_name = req.body.firstName;
-      let last_name = req.body.lastName;
-      let email = req.body.email;
-      let birth_date = new Date(req.body.birthDate);
-      let password = req.body.password;
-      let password_confirmation = req.body.passwordConfirmation;
-      console.log(
+      const first_name = req.body.firstName;
+      const last_name = req.body.lastName;
+      const email = req.body.email;
+      const birth_date = new Date(req.body.birthDate)
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " ");
+      const password = req.body.password;
+      const password_confirmation = req.body.passwordConfirmation;
+      const salt = await bcrypt.generateSalt();
+      const hashed_password = await bcrypt.hashPassword(salt, password);
+      db.insertNewUser(
+        first_name,
+        last_name,
+        email,
+        birth_date,
+        salt,
+        hashed_password
+      );
+      /**
+console.log(
         JSON.stringify(
           {
             first_name,
@@ -83,7 +96,11 @@ app
           2
         )
       );
-      res.render("pages/login");
+      **/
+      return res.render("pages/login", {
+        errors: [],
+        formData: {},
+      });
     }
   );
 
